@@ -1,10 +1,11 @@
+import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const RegisterForm = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
+  const [password, setPass] = useState("");
   const [repass, setRePass] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showPassModal, setShowPassModal] = useState(false);
@@ -27,12 +28,12 @@ const RegisterForm = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (username === "" || email === "" || pass === "" || repass === "") {
+    if (username === "" || email === "" || password === "" || repass === "") {
       setShowModal(true);
       return;
     }
 
-    if (pass !== repass) {
+    if (password !== repass) {
       setShowPassModal(true);
       setPass("");
       setRePass("");
@@ -40,11 +41,14 @@ const RegisterForm = () => {
     }
 
     const finalData = {
-      name: username,
+      username: username,
       email: email,
-      pass: pass,
-      repass: repass,
+      password: password,
     };
+
+    axios.post("http://localhost:3000/users/register", finalData).then(() => {
+      alert("User Registered Successfully!");
+    });
 
     console.log(finalData);
     setUsername("");
@@ -82,7 +86,7 @@ const RegisterForm = () => {
           type="password"
           name="pass"
           placeholder="Password"
-          value={pass}
+          value={password}
           onChange={handlePasswordChange}
           className="text-[16px] rounded-xl border border-gray-100 bg-white/80 py-3 px-5 shadow backdrop-blur-lg"
         />
