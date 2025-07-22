@@ -1,24 +1,54 @@
+import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showEmptyFieldsModal, setEmptyFieldsModalValue] = useState(false);
+  const [error, setError] = useState("");
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
+    setError("");
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+    setError("");
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (username === "" || password === "") {
       setEmptyFieldsModalValue(true);
       return;
+    }
+
+    const loginData = {
+      username: username,
+      password: password,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/users/login",
+        loginData
+      );
+
+      alert("User Logged in successfully!");
+
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
+      navigate("/");
+    } catch (err: any) {
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Something went wrong");
+      }
     }
   };
 
@@ -53,6 +83,9 @@ const LoginForm = () => {
               Register Here
             </Link>
           </p>
+          {error && (
+            <p className="text-red-600 text-center font-bold">{error}</p>
+          )}
           <input
             type="submit"
             value="Login"
