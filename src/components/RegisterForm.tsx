@@ -1,14 +1,17 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
   const [repass, setRePass] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showPassModal, setShowPassModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -47,7 +50,7 @@ const RegisterForm = () => {
     };
 
     axios.post("http://localhost:3000/users/register", finalData).then(() => {
-      alert("User Registered Successfully!");
+      setShowSuccessModal(true);
     });
 
     console.log(finalData);
@@ -138,6 +141,26 @@ const RegisterForm = () => {
             <button
               className="mt-4 px-4 py-2 bg-red-600 text-white rounded-xl w-full cursor-pointer"
               onClick={closeModal}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showSuccessModal && (
+        <div className="fixed inset-0 flex justify-center items-center ">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-80 border border-gray-100 flex flex-col justify-center items-center">
+            <h2 className="text-xl font-semibold text-green-600">Success</h2>
+            <p className="text-center text-sm mt-4">
+              User Registered Successfully!
+            </p>
+            <button
+              className="mt-4 px-4 py-2 bg-green-600 text-white rounded-xl w-full cursor-pointer"
+              onClick={() => {
+                setShowSuccessModal(false);
+                navigate("/login");
+              }}
             >
               Close
             </button>

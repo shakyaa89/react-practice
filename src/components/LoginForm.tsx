@@ -9,6 +9,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [showEmptyFieldsModal, setEmptyFieldsModalValue] = useState(false);
   const [error, setError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -38,11 +39,9 @@ const LoginForm = () => {
         loginData
       );
 
-      alert("User Logged in successfully!");
-
       localStorage.setItem("user", JSON.stringify(response.data.user));
-
-      navigate("/");
+      window.dispatchEvent(new Event("userChanged"));
+      setShowSuccessModal(true);
     } catch (err: any) {
       if (err.response?.data?.message) {
         setError(err.response.data.message);
@@ -103,6 +102,26 @@ const LoginForm = () => {
               <button
                 className="mt-4 px-4 py-2 bg-red-600 text-white rounded-xl w-full cursor-pointer"
                 onClick={closeModal}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+
+        {showSuccessModal && (
+          <div className="fixed inset-0 flex justify-center items-center ">
+            <div className="bg-white p-6 rounded-lg shadow-xl w-80 border border-gray-100 flex flex-col justify-center items-center">
+              <h2 className="text-xl font-semibold text-green-600">Success</h2>
+              <p className="text-center text-sm mt-4">
+                User Logged in successfully!
+              </p>
+              <button
+                className="mt-4 px-4 py-2 bg-green-600 text-white rounded-xl w-full cursor-pointer"
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  navigate("/dashboard");
+                }}
               >
                 Close
               </button>

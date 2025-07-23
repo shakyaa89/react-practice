@@ -12,11 +12,12 @@ const NavBar = () => {
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
-
-    if (user) {
-      setLoggedInUser(JSON.parse(user));
-    }
+    const updateUser = () => {
+      const user = localStorage.getItem("user");
+      setLoggedInUser(user ? JSON.parse(user) : null);
+    };
+    window.addEventListener("userChanged", updateUser);
+    return () => window.removeEventListener("userChanged", updateUser);
   }, []);
 
   const handleLogout = () => {
@@ -51,13 +52,21 @@ const NavBar = () => {
             >
               About Us
             </NavLink>
+            {loggedInUser && (
+              <NavLink
+                to="/professor"
+                className="inline-block rounded-lg px-2 py-1 text-sm font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900"
+              >
+                Professor
+              </NavLink>
+            )}
           </div>
 
           {/* Auth Buttons */}
           {loggedInUser ? (
             <div className="flex items-center justify-end gap-3">
               <NavLink
-                to="/"
+                to="/dashboard"
                 className="hidden items-center justify-center rounded-xl bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 transition-all duration-150 hover:bg-gray-50 sm:inline-flex"
               >
                 {loggedInUser.username}
