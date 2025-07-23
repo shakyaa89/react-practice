@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import UsersList from "../components/UsersList";
 
 const DashboardPage = () => {
   const [name, setName] = useState("");

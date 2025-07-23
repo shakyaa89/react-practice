@@ -1,5 +1,3 @@
-import UsersList from "../components/UsersList";
-
 const AboutUsPage = () => {
   return (
     <div className="max-w-3xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-md">
